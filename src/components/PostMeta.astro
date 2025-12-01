@@ -1,9 +1,9 @@
 ---
 import { Icon } from "astro-icon/components";
-
-import { getDir, url } from "../utils/url-utils";
+import { url } from "../utils/url-utils";
 import { formatDateToYYYYMMDD } from "../utils/date-utils";
-import { umamiConfig, statsConfig } from "../config";
+// 移除 Umami 相关配置导入
+// import { umamiConfig, statsConfig } from "../config";
 
 interface Props {
 	class: string;
@@ -12,127 +12,67 @@ interface Props {
 	tags: string[];
 	hideTagsForMobile?: boolean;
 	hideUpdateDate?: boolean;
-	slug?: string;
+	// 移除 Umami 统计依赖的 slug 参数
+	// slug?: string;
 }
+
 const {
 	published,
 	updated,
 	tags,
 	hideTagsForMobile = false,
 	hideUpdateDate = false,
-	slug,
+	// 移除 slug 接收
+	// slug,
 } = Astro.props;
 const className = Astro.props.class;
 ---
-
 <div class:list={["flex flex-wrap text-neutral-500 dark:text-neutral-400 items-center gap-4 gap-x-4 gap-y-2", className]}>
-    <!-- publish date -->
+    <!-- 发布时间 -->
     <div class="flex items-center">
-        <div class="meta-icon"
-        >
+        <div class="meta-icon">
             <Icon name="material-symbols:calendar-today-outline-rounded" class="text-xl"></Icon>
         </div>
         <span class="text-50 text-sm font-medium">{formatDateToYYYYMMDD(published)}</span>
     </div>
 
-    <!-- update date -->
+    <!-- 更新时间（条件显示） -->
     {!hideUpdateDate && updated && updated.getTime() !== published.getTime() && (
         <div class="flex items-center">
-            <div class="meta-icon"
-            >
+            <div class="meta-icon">
                 <Icon name="material-symbols:edit-calendar-outline-rounded" class="text-xl"></Icon>
             </div>
             <span class="text-50 text-sm font-medium">{formatDateToYYYYMMDD(updated)}</span>
         </div>
     )}
 
-    <!-- tags -->
+    <!-- 文章标签（响应式显示） -->
     <div class:list={["items-center", {"flex": !hideTagsForMobile, "hidden md:flex": hideTagsForMobile}]}>
-        <div class="meta-icon"
-        >
+        <div class="meta-icon">
             <Icon name="material-symbols:tag-rounded" class="text-xl"></Icon>
         </div>
         <div class="flex flex-row flex-nowrap items-center">
             {(tags && tags.length > 0) && tags.map((tag, i) => (
-                <div class:list={[{"hidden": i == 0}, "mx-1.5 text-[var(--meta-divider)] text-sm"]}>/</div>
-                <a href={url(`/archive/tag/${tag}/`)} aria-label=`View all posts with the ${tag} tag`
-                   class="link-lg transition text-50 text-sm font-medium
-                                hover:text-[var(--primary)] dark:hover:text-[var(--primary)] whitespace-nowrap">
-                    {tag}
-                </a>
+                <>
+                    {/* 标签分隔符（非第一个标签前显示） */}
+                    {i > 0 && <div class="mx-1.5 text-[var(--meta-divider)] text-sm">/</div>}
+                    {/* 标签链接（跳转至标签归档页） */}
+                    <a 
+                        href={url(`/archive/tag/${tag}/`)} 
+                        aria-label={`View all posts with the ${tag} tag`}
+                        class="link-lg transition text-50 text-sm font-medium
+                              hover:text-[var(--primary)] dark:hover:text-[var(--primary)] whitespace-nowrap"
+                    >
+                        {tag}
+                    </a>
+                </>
             ))}
+            {/* 无标签时显示提示 */}
             {!(tags && tags.length > 0) && <div class="transition text-50 text-sm font-medium">无标签</div>}
         </div>
     </div>
 
-    <!-- page views -->
-    {slug && (
-        <div class="flex items-center">
-            <div class="meta-icon">
-                <Icon name="material-symbols:visibility-outline-rounded" class="text-xl"></Icon>
-            </div>
-            <span class="text-50 text-sm font-medium" id="page-views-display">{statsConfig.loadingText}</span>
-        </div>
-    )}
+    <!-- 移除 Umami 浏览量统计相关的 DOM 元素 -->
 </div>
 
-{slug && (
-    <script define:vars={{ slug, umamiConfig, unavailableText: statsConfig.unavailableText, viewsText: statsConfig.viewsText, visitsText: statsConfig.visitsText }}>
-        // 客户端统计文案生成函数
-        function generateStatsText(pageViews, visits) {
-            return `${viewsText} ${pageViews} · ${visitsText} ${visits}`;
-        }
-        
-        // 获取访问量统计
-        async function fetchPageViews(isRetry = false) {
-            if (!umamiConfig.enable) {
-                return;
-            }
-            
-            try {
-                // 调用全局工具获取 Umami 分享数据
-                const { websiteId, token } = await getUmamiShareData(umamiConfig.baseUrl, umamiConfig.shareId);
-                
-                // 第二步：获取统计数据
-                const currentTimestamp = Date.now();
-                const statsUrl = `${umamiConfig.baseUrl}/analytics/us/api/websites/${websiteId}/stats?startAt=0&endAt=${currentTimestamp}&unit=hour&timezone=${encodeURIComponent(umamiConfig.timezone)}&path=eq.%2Fposts%2F${slug}%2F&compare=false`;
-                
-                const statsResponse = await fetch(statsUrl, {
-                    headers: {
-                        'x-umami-share-token': token
-                    }
-                });
-                
-                if (!statsResponse.ok) {
-                    if (statsResponse.status === 401 && !isRetry) {
-                        clearUmamiShareCache();
-                        return fetchPageViews(true);
-                    }
-                    throw new Error('获取统计数据失败');
-                }
-                
-                const statsData = await statsResponse.json();
-            const pageViews = statsData.pageviews || 0;
-            const visits = statsData.visitors || 0;
-                
-                const displayElement = document.getElementById('page-views-display');
-                if (displayElement) {
-                    displayElement.textContent = generateStatsText(pageViews, visits);
-                }
-            } catch (error) {
-                console.error('Error fetching page views:', error);
-                const displayElement = document.getElementById('page-views-display');
-                if (displayElement) {
-                    displayElement.textContent = unavailableText;
-                }
-            }
-        }
-
-        // 页面加载完成后获取统计数据
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', fetchPageViews);
-        } else {
-            fetchPageViews();
-        }
-    </script>
-)}
+<!-- 移除 Umami 统计相关的脚本 -->

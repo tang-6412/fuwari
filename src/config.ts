@@ -11,10 +11,10 @@ import type {
 import { LinkPreset } from "./types/config";
 
 export const siteConfig: SiteConfig = {
-	title: "AcoFork Blog",
-	subtitle: "技术分享与实践",
+	title: "TangJunkai's Blog",
+	subtitle: "基于魔改Fuwari",
 	description:
-		"分享网络技术、服务器部署、内网穿透、静态网站搭建、CDN优化、容器化部署等技术教程与实践经验的个人技术博客，专注于云原生、无服务器架构和前后端开发，作者为afoim/二叉树树",
+		"一个很详细的网站简介（？）",
 
 	keywords: [],
 	lang: "zh_CN", // 'en', 'zh_CN', 'zh_TW', 'ja', 'ko', 'es', 'th'
@@ -57,9 +57,7 @@ export const siteConfig: SiteConfig = {
 		},
 	],
 	officialSites: [
-		{ url: "https://2x.nz", alias: "Vercel" },
-		{ url: "https://blog.2b2x.cn", alias: "备案域" },
-		{ url: "https://b.2.f.f.0.7.4.0.1.0.0.2.ip6.arpa", alias: "漏网之鱼" },
+		{ url: "https://tangjunkai.vercel.app/", alias: "Vercel" },
 		{ url: "http://localhost:4321", alias: "Dev" }
 	],
 };
@@ -79,33 +77,23 @@ export const navBarConfig: NavBarConfig = {
 			url: "/sponsors/", // Internal links should not include the base path, as it is automatically added
 			external: false, // Show an external link icon and will open in a new tab
 		},
-		{
-			name: "统计",
-			url: "https://cloud.umami.is/share/hN3l7PGcxsUCBHfU", // Internal links should not include the base path, as it is automatically added
-			external: true, // Show an external link icon and will open in a new tab
-		},
-		{
-			name: "状态",
-			url: "https://stats.uptimerobot.com/VAtAH0mzPN", // Internal links should not include the base path, as it is automatically added
-			external: true, // Show an external link icon and will open in a new tab
-		},
 	],
 };
 
 export const profileConfig: ProfileConfig = {
 	avatar: "https://q2.qlogo.cn/headimg_dl?dst_uin=2726730791&spec=0", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
-	name: "二叉树树",
-	bio: "Protect What You Love.",
+	name: "tangjunkai",
+	bio: "Never Gonna Give You UP.",
 	links: [
 		{
 			name: "Bilibli",
 			icon: "fa6-brands:bilibili",
-			url: "https://space.bilibili.com/325903362",
+			url: "https://b23.tv/vZHMgIT",
 		},
 		{
 			name: "GitHub",
 			icon: "fa6-brands:github",
-			url: "https://github.com/afoim",
+			url: "https://github.com/tang-6412",
 		},
 	],
 };
@@ -135,7 +123,7 @@ export const expressiveCodeConfig: ExpressiveCodeConfig = {
 
 export const gitHubEditConfig: GitHubEditConfig = {
 	enable: true,
-	baseUrl: "https://github.com/afoim/fuwari/blob/main/src/content/posts",
+	baseUrl: "https://github.com/tang-6412/fuwari/blob/main/src/content/posts",
 };
 
 
