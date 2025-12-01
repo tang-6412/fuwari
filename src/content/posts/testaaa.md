@@ -8,13 +8,14 @@ tags:
 draft: false
 lang: ""
 ---
-> 参考：
+> 哈基米南北绿豆
 > 
 > [项目github](https://github.com/tang-6412/fuwari-2x)
 > 
 
 # 开头
-文章居然可以用**Markdown**写
+文章可以用**Markdown**写
 
 ![](../assets/images/zte-f450-bridge-3.png)
+
 
