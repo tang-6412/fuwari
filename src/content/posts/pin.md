@@ -10,5 +10,8 @@ description: 联系我
 ---
 
 ## QQ
+>QQ号：234001931
 
-![](../assets/images/QQimage.png)
+##邮箱
+>tangjunkai6412@outlook.com
+>234001931@qq.com
