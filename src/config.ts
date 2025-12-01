@@ -49,16 +49,18 @@ export const siteConfig: SiteConfig = {
 		depth: 2, // Maximum heading depth to show in the table, from 1 to 3
 	},
 	favicon: [
-		// Leave this array empty to use the default favicon
+		// 网页图标 https://q2.qlogo.cn/headimg_dl?dst_uin=2726730791&spec=0
 		{
-			src: "https://q2.qlogo.cn/headimg_dl?dst_uin=2726730791&spec=0", // Path of the favicon, relative to the /public directory
+			src: "/favicon/ht.jpg", // Path of the favicon, relative to the /public directory
 			//   theme: 'light',              // (Optional) Either 'light' or 'dark', set only if you have different favicons for light and dark mode
 			//   sizes: '32x32',              // (Optional) Size of the favicon, set only if you have favicons of different sizes
 		},
 	],
 	officialSites: [
+		{ url: "https://fuwari-cc3.pages.dev/",alias:"CloudFlare（临时）" },
 		{ url: "https://tangjunkai.vercel.app/", alias: "Vercel" },
 		{ url: "http://localhost:4321", alias: "Dev" }
+	
 	],
 };
 

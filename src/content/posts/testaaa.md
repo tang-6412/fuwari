@@ -2,7 +2,7 @@
 title: 测试aaa
 published: 2025-12-01T14:42:54
 description: 简介qwq
-image: ../assets/images/zte-f450-bridge-4.jpg
+image: ../assets/images/251201duo.jpg
 tags:
   - fuwari
 draft: false

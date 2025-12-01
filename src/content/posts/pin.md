@@ -1,6 +1,6 @@
 ---
 title: 联系方式
-image: https://eopfapi.b.2.f.f.0.7.4.0.1.0.0.2.ip6.arpa/ri/h/622.webp
+image: ../assets/images/pin.jpg
 published: 2025-12-01
 pinned: true
 category: 置顶
