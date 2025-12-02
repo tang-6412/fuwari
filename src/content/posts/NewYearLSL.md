@@ -1,6 +1,6 @@
 ---
 title: 圣礼拜年
-published: 2025-12-02T15:56:04
+published: 1981-01-01T15:56:04
 description: 同学强烈要求弄的
 image: ../assets/images/LSL.jpg
 tags:
@@ -8,6 +8,7 @@ tags:
 draft: false 
 lang: ''
 ---
+2025-12-02<br>
 
 <video src="/mp4/GXFC.mp4" controls style="border-radius: 18px; width: 100%;"></video>
-
+[.](/mp4/GXW.mp4)

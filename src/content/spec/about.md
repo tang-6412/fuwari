@@ -5,11 +5,12 @@
 ## 概述
 
 本网站是一个静态网站，采用Fuwari框架，并使用MIT协议开源于Github，我们非常重视您的隐私。本隐私政策说明了当您访问我们的网站时，可能收集、使用和披露您信息的方式。
-
+<small>
+> 页面字体采用由落霞孤鹜开发的霞鹜文楷 (LXGW WenKai)，这是一款开源中文字体，项目地址：[https://github.com/lxgw/LxgwWenKai](https://github.com/lxgw/LxgwWenKai)，字体以 SIL Open Font License 1.1 协议开源。</small>
 ## 开源性质
 
-**本网站使用并修改了 [二叉树树](https://2x.nz) 修改的开源项目 Fuwari**
-如有侵权，联系删除
+**本网站使用并修改了 [二叉树树](https://2x.nz) 修改的开源项目 Fuwari**<br>
+<small>如有侵权，联系删除</small>
 ::github{repo="afoim/fuwari"}
 **本项目开源链接**
 ::github{repo="tang-6412/fuwari"}
@@ -99,9 +100,7 @@
 ## 适用法律
 
 本隐私政策受中华人民共和国法律管辖。我们努力遵守适用的数据保护法律法规。
-
 ---
-
 *本隐私政策旨在透明地说明我们的数据处理实践。我们建议您定期查看本政策以了解任何更新。*
 
-修改自[2x.nz](https://2x.nz/about/)
+<small>修改自[2x.nz](https://2x.nz/about/)</small>
