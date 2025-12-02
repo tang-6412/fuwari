@@ -1,6 +1,6 @@
 ---
 category: 教程
-description: 搭建Fuwari，并部署到Vercel和CF
+description: 搭建Fuwari，并部署到CF
 draft: false
 image: ../assets/images/fuwari1.jpg
 lang: ""
@@ -14,7 +14,7 @@ title: Fuwari搭建教程
 
 - 1. 一个牛逼的脑子，支持多线程运算，遇到问题会思考，不会的会自己查
 
-- 2. 一个AI工具，不懂的可以去问他
+- 2. 一个AI工具，不懂的可以去问她
 
 - 3. [Node.js — Run JavaScript Everywhere (nodejs.org)](https://nodejs.org/en)：Fuwari是基于Node.js开发的，得先装上它才能搭博客
 
@@ -22,13 +22,11 @@ title: Fuwari搭建教程
 
 - 5. 一个[Cloudflare](https://cloudflare.com)账号：托管网站用的，国内访问也比较顺畅
 
-- 6. 一个[Vercel](https://vercel.com/)账号：也是托管平台，不过国内直接访问需要点小技巧，绑了自己的域名访问就方便多了
+- 6. [MarkText](https://www.marktext.cc)：这是一个可视化MarkDown编辑器，因为Fuwari的每一篇文章/页面都用了MarkDown，所以需要一个好用的MarkDown编辑器
 
-- 7. [MarkText](https://www.marktext.cc)：这是一个可视化MarkDown编辑器，因为Fuwari的每一篇文章/页面都用了MarkDown，所以需要一个好用的MarkDown编辑器
+- 7. 稍微懂点Markdown语法：毕竟Fuwari的文章都是用这个写的，可以参照：[Markdown 基本语法 | Markdown 官方教程](https://markdown.com.cn/basic-syntax/)
 
-- 8. 稍微懂点Markdown语法：毕竟Fuwari的文章都是用这个写的，可以参照：[Markdown 基本语法 | Markdown 官方教程](https://markdown.com.cn/basic-syntax/)
-
-- 9. 一个Linux终端：可以方便的预览、拉取和更新你的github上的fuwari仓库。Windows可以用WSL或虚拟机，Android可以用Termux，具体自己查。
+- 8. 一个Linux终端：可以方便的预览、拉取和更新你的github上的fuwari仓库。Windows可以用WSL或虚拟机，Android可以用Termux，具体自己查。
 
 ### 流程图
 
@@ -150,10 +148,10 @@ title: Fuwari搭建教程
    
    - 之后，让我们发布一个本地提交：`git commit -m "更新名称可以自己填"`
    
-   - 最后，让我们将本地更改提交到远程仓库：`git push`。它会先让你输入用户名，然后让你输入Github Token（不是登录密码）。![](../assets/images/Pasted image 20251202131504.jpg)
+   - 最后，让我们将本地更改提交到远程仓库：`git push`。它会先让你输入用户名，然后让你输入Github Token（不是登录密码）。![](../assets/images/Pastedimage20251202131504.jpg)
 2. 此时，你的Github仓库应该已经有了新的提交
 
-### 使用Cloudflare / Vercel托管你的Fuwari
+### 使用Cloudflare托管你的Fuwari
 
 ##### [Cloudflare](https://www.cloudflare.com/zh-cn/)
 1. 登陆你的Cloudflare
@@ -163,7 +161,8 @@ title: Fuwari搭建教程
 5. 我们的Fuwari存放在Github仓库，就**点击”导入现有 Git 储存库“旁的开始使用**![](../assets/images/CFgit.png)
 6. 登陆好Github后，会要求选择一个储存库。我们就选择存放Fuwari的那个仓库，点击开始设置
 7. ”框架预设“中选择`Astro`，构建命令输入`pnpm build`。最后点击右下角的”保存并部署“，就会自动开始部署。如果有报错，复制日志给AI取得解决方法。![](../assets/images/CFAstro.png)
-8. 稍等一会儿，你的Fuwari就部署好了！他会给你一个`pages.dev`结尾的域名，访问它就可以进入你的网站了！
+8. 稍等一会儿，你的Fuwari就部署好了！他会给你一个`pages.dev`结尾的域名，访问它就可以进入你的网站了，绑定自定义域，即可通过自定义域访问！
+9. 随后，你只需要在本地编写文章，然后使用Git将更改推送到远程仓库，Cloudflare就会自动部署，更新你的博客！
 
 本文参考了[Fuwari静态博客搭建教程 - AcoFork Blog](https://2x.nz/posts/fuwari/)
 

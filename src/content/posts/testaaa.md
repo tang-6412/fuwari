@@ -4,17 +4,17 @@ published: 2025-12-01T14:42:54
 description: 简介qwq
 image: ../assets/images/251201duo.jpg
 tags:
-  - fuwari
+  - Fuwari
 draft: false
 lang: ""
 ---
-> 哈基米南北绿豆
+> Ciallo
 > 
 > [项目github](https://github.com/tang-6412/fuwari-2x)
 > 
 
 # 开头
-文章可以用**Markdown**写
+**Markdown**
 
 ![](../assets/images/zte-f450-bridge-3.png)
 
