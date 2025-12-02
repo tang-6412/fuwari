@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tangjunkai的垃圾网页</title>
+  <style>
+    :root { --primary-color:#1e90ff; --secondary-color:#87cefa; --bg-color:#f0f8ff; --text-color:#333; --card-bg:rgba(255,255,255,0.8); --sidebar-bg:rgba(255,255,255,0.2); --nav-bg:rgba(255,255,255,0.2); --gradient-speed:10s; --bilibili-text:#333; }
+    .theme-green{--primary-color:#2ecc71;--secondary-color:#a3e4d7;--bg-color:#e8f8f5;--text-color:#333;--bilibili-text:#333;}
+    .theme-pink{--primary-color:#ff6b81;--secondary-color:#ffb8c6;--bg-color:#fff0f3;--text-color:#333;--bilibili-text:#333;}
+    .theme-dark{--primary-color:#bb86fc;--secondary-color:#3700b3;--bg-color:#121212;--text-color:#e1e1e1;--card-bg:rgba(30,30,30,0.8);--sidebar-bg:rgba(30,30,30,0.5);--nav-bg:rgba(30,30,30,0.5);--bilibili-text:#e1e1e1;}
+    *{margin:0;padding:0;box-sizing:border-box;transition:all .3s ease;font-family:Arial,sans-serif;}
+    body{min-height:100vh;overflow-x:hidden;color:var(--text-color);
+      background:linear-gradient(135deg,var(--primary-color),var(--secondary-color),var(--bg-color));
+      background-size:400% 400%;animation:gradientShift var(--gradient-speed) ease infinite;}
+    @keyframes gradientShift{0%{background-position:0 50%}50%{background-position:100% 50%}100%{background-position:0 50%}}
+    .top-nav{position:fixed;top:0;left:0;right:0;height:64px;background:var(--nav-bg);backdrop-filter:blur(10px);
+      display:flex;align-items:center;justify-content:space-between;padding:0 20px;z-index:100;}
+    .logo{color:var(--text-color);font-size:20px;font-weight:bold;cursor:pointer;}
+    .mobile-menu-btn{display:none;background:none;border:none;color:var(--text-color);font-size:20px;cursor:pointer;position:absolute;
+      top:18px;left:10px;z-index:101;}
+    .nav-right{display:flex;align-items:center;gap:15px;}
+    .theme-switcher{position:relative;}
+    .theme-btn{background:rgba(255,255,255,0.3);color:var(--text-color);border:none;padding:6px 12px;border-radius:20px;
+      cursor:pointer;display:flex;align-items:center;gap:5px;}
+    .theme-btn::after{content:'▼';font-size:10px;transition:transform .3s ease;}
+    .theme-btn.active::after{transform:rotate(180deg);}
+    .theme-options{position:absolute;top:100%;right:0;display:none;flex-direction:column;gap:5px;background:var(--card-bg);
+      border-radius:8px;box-shadow:0 5px 15px rgba(0,0,0,0.1);padding:8px;min-width:140px;z-index:120;
+      opacity:0;transform:translateY(-10px);transition:all .3s ease;}
+    .theme-options.show{display:flex;opacity:1;transform:translateY(0);}
+    .theme-option{padding:6px 10px;border-radius:4px;cursor:pointer;text-align:center;transition:background .2s ease;}
+    .theme-option:hover{background:rgba(0,0,0,0.1);}
+    .time-display{color:var(--text-color);font-family:Courier New,monospace;padding:6px 12px;background:rgba(255,255,255,0.2);
+      border-radius:20px;font-size:14px;}
+    .container{display:flex;padding-top:64px;position:relative;}
+    .sidebar{position:fixed;top:64px;bottom:0;width:250px;background:var(--sidebar-bg);backdrop-filter:blur(10px);
+      padding:20px;box-shadow:2px 0 15px rgba(0,0,0,0.1);transition:all .3s ease;transform:translateX(0);overflow:hidden;z-index:105;}
+    .sidebar.collapsed{width:60px;padding:20px 0;}
+    .sidebar.collapsed .sidebar-text{display:none;opacity:0;transition:opacity .2s ease;}
+    .sidebar.collapsed h2{display:none;opacity:0;transition:opacity .2s ease;}
+    .sidebar.collapsed .theme-switcher-mobile{display:none;}
+    .sidebar.collapsed ul{display:flex;flex-direction:column;align-items:center;padding:0;}
+    .sidebar.collapsed li{width:100%;display:flex;justify-content:center;}
+    .sidebar.collapsed a{padding:10px;justify-content:center;}
+    .toggle-sidebar{position:absolute;top:20px;right:-15px;width:30px;height:30px;background:var(--primary-color);
+      border:none;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:110;box-shadow:0 0 5px rgba(0,0,0,0.2);}
+    .sidebar h2{color:var(--text-color);margin-bottom:20px;font-size:18px;white-space:nowrap;transition:opacity .3s ease;}
+    .sidebar ul{list-style:none;transition:all .3s ease;}
+    .sidebar li{margin-bottom:10px;transition:all .3s ease;}
+    .sidebar a{color:var(--text-color);text-decoration:none;display:flex;align-items:center;padding:8px 12px;border-radius:4px;transition:all .3s ease;}
+    .sidebar a:hover,.sidebar a.active{background:rgba(255,255,255,0.3);}
+    .sidebar-icon{margin-right:8px;font-size:18px;transition:all .3s ease;}
+    .sidebar.collapsed .sidebar-icon{margin-right:0;font-size:20px;}
+    .theme-switcher-mobile{display:none;margin-top:0;margin-bottom:20px;}
+    .theme-switcher-mobile .theme-btn{width:100%;margin-bottom:10px;}
+    .theme-switcher-mobile .theme-options{position:static;display:none;flex-direction:column;gap:5px;margin-bottom:15px;
+      opacity:0;height:0;overflow:hidden;transition:all .3s ease;}
+    .theme-switcher-mobile .theme-options.show{display:flex;opacity:1;height:auto;}
+    .main-content{margin-left:250px;padding:20px;transition:margin-left .3s ease;}
+    .sidebar.collapsed ~ .main-content{margin-left:60px;}
+    .content-section{display:none;}
+    .content-section.active{display:block;animation:fadeIn .5s ease;}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+    .card{background:var(--card-bg);border-radius:8px;padding:20px;margin-bottom:20px;}
+    h1,h2{color:var(--primary-color);margin-bottom:10px;}
+    p{line-height:1.5;}
+    .avatar{width:100%;max-width:150px;border-radius:50%;border:3px solid var(--primary-color);display:block;margin:0 auto;}
+    .bilibili-btn{
+      display:inline-flex;
+      align-items:center;
+      gap:5px;
+      margin-top:10px;
+      padding:8px 12px;
+      background:var(--card-bg);
+      color:var(--bilibili-text);
+      border:1px solid rgba(0,0,0,0.1);
+      border-radius:8px;
+      text-decoration:none;
+      font-size:14px;
+      font-weight:bold;
+      backdrop-filter:blur(4px);
+      box-shadow:0 2px 4px rgba(0,0,0,0.05);
+      transition:all 0.3s ease;
+    }
+    .bilibili-btn i{
+      font-size:16px;
+      color:var(--bilibili-text);
+    }
+    .bilibili-btn:hover{
+      background:var(--card-bg);
+      transform:translateY(-1px);
+      box-shadow:0 4px 6px rgba(0,0,0,0.1);
+      border-color:rgba(0,0,0,0.15);
+    }
+    @media (max-width:768px){
+      .mobile-menu-btn{display:flex !important;}
+      .logo{display:none;}
+      .container{display:block;}
+      .sidebar{transform:translateX(-100%);}
+      .sidebar.show-mobile{transform:translateX(0);}
+      .toggle-sidebar{display:none;}
+      .main-content{margin-left:0;padding-top:20px;}
+      .time-display{display:none;}
+      .theme-switcher{display:none;}
+      .theme-switcher-mobile{display:block;}
+    }
+    @media (min-width:769px){
+      .mobile-menu-btn{display:none !important;}
+    }
+
+    /* 版本信息 */
+    .version-info {
+      position: fixed;
+      bottom: 10px;
+      right: 15px;
+      font-size: 12px;
+      color: var(--primary-color);
+      opacity: 0.8;
+      z-index: 99;
+      mix-blend-mode: multiply;
+    }
+    .theme-dark .version-info { 
+      color: #fff; 
+      mix-blend-mode: normal; 
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+</head>
+<body>
+  <nav class="top-nav">
+    <button class="mobile-menu-btn" id="mobileMenuBtn"><i class="fas fa-bars"></i></button>
+    <div class="logo" id="homeBtn">tangjunkai</div>
+    <div class="nav-right">
+      <div class="theme-switcher">
+        <button class="theme-btn" id="themeBtn"><span id="currentTheme">蓝白</span></button>
+        <div class="theme-options" id="themeOptions">
+          <div class="theme-option" data-theme="default">蓝白</div>
+          <div class="theme-option" data-theme="green">绿白</div>
+          <div class="theme-option" data-theme="pink">粉白</div>
+          <div class="theme-option" data-theme="dark">暗黑</div>
+        </div>
+      </div>
+      <div class="time-display" id="timeDisplay"></div>
+    </div>
+  </nav>
+  <div class="container">
+    <div class="sidebar" id="sidebar">
+      <button class="toggle-sidebar" id="toggleSidebar"><i class="fas fa-chevron-left" id="sidebarIcon"></i></button>
+      <h2 class="sidebar-text">中心</h2>
+      <ul>
+        <li><div class="theme-switcher-mobile">
+          <button class="theme-btn" id="mobileThemeBtn"><i class="fas fa-palette sidebar-icon"></i><span class="sidebar-text">主题</span></button>
+          <div class="theme-options" id="mobileThemeOptions">
+            <div class="theme-option" data-theme="default">蓝白</div>
+            <div class="theme-option" data-theme="green">绿白</div>
+            <div class="theme-option" data-theme="pink">粉白</div>
+            <div class="theme-option" data-theme="dark">暗黑</div>
+          </div>
+        </div></li>
+        <li><a class="side-link active" data-section="about"><i class="fas fa-user sidebar-icon"></i><span class="sidebar-text">关于我</span></a></li>
+        <li><a class="side-link" data-section="blog"><i class="fas fa-blog sidebar-icon"></i><span class="sidebar-text">博客</span></a></li>
+        <li><a class="side-link" data-section="contact"><i class="fas fa-envelope sidebar-icon"></i><span class="sidebar-text">联系</span></a></li>
+      </ul>
+    </div>
+    <div class="main-content" id="mainContent">
+      <div class="content-section active" id="about">
+        <div class="card"><h1>关于我</h1><p>Ciallo～(∠・ω< )⌒★</p></div>
+        <div class="card"><img src="/favicon/ht.jpg" alt="头像" class="avatar" /></div>
+      </div>
+      <div class="content-section" id="blog"><div class="card"><h1>博客</h1><p>分享技术见解。</p></div></div>
+      <div class="content-section" id="contact"><div class="card"><h1>联系</h1><p>欢迎联系合作！</p>
+        <a href="https://space.bilibili.com/1054183485?spm_id_from=333.1007.0.0" class="bilibili-btn" target="_blank"><i class="fab fa-bilibili"></i> B站主页</a></div></div>
+    </div>
+  </div>
+  <div class="version-info">BY tangjunkai 250518 Ver.0.9.1 该版本已弃用，怀旧用</div>
+
+  <script>
+    window.addEventListener('DOMContentLoaded',()=>{
+      const sidebar=document.getElementById('sidebar'),toggle=document.getElementById('toggleSidebar'),mobileBtn=document.getElementById('mobileMenuBtn');
+      
+      // 移动端菜单初始状态
+      if(window.innerWidth <= 768) {
+        mobileBtn.style.display = 'flex';
+      }
+      
+      toggle.onclick=()=>{
+        sidebar.classList.toggle('collapsed');
+        const icon=document.getElementById('sidebarIcon');
+        icon.classList.toggle('fa-chevron-left');
+        icon.classList.toggle('fa-chevron-right');
+      };
+      
+      mobileBtn.onclick=()=>{
+        sidebar.classList.toggle('show-mobile');
+      };
+      
+      const themeBtns=document.querySelectorAll('.theme-btn'),options=document.querySelectorAll('.theme-options');
+      themeBtns.forEach(btn=>{
+        btn.onclick=function(e){
+          e.stopPropagation();
+          const options=this.closest('.theme-switcher, .theme-switcher-mobile').querySelector('.theme-options');
+          this.classList.toggle('active');
+          options.classList.toggle('show');
+        }
+      });
+      
+      document.addEventListener('click',()=>{
+        options.forEach(o=>{
+          o.classList.remove('show');
+          o.closest('.theme-switcher, .theme-switcher-mobile').querySelector('.theme-btn').classList.remove('active');
+        });
+      });
+      
+      document.querySelectorAll('.theme-option').forEach(opt=>opt.onclick=function(){
+        document.body.className='';
+        if(this.dataset.theme!=='default')document.body.classList.add(`theme-${this.dataset.theme}`);
+        document.getElementById('currentTheme').textContent=this.textContent;
+        document.querySelectorAll('.theme-options').forEach(o=>{
+          o.classList.remove('show');
+          o.closest('.theme-switcher, .theme-switcher-mobile').querySelector('.theme-btn').classList.remove('active');
+        });
+      });
+      
+      document.querySelectorAll('.side-link').forEach(link=>link.onclick=e=>{
+        e.preventDefault();
+        document.querySelectorAll('.content-section').forEach(s=>s.classList.remove('active'));
+        document.getElementById(link.dataset.section).classList.add('active');
+        document.querySelectorAll('.side-link').forEach(l=>l.classList.remove('active'));
+        link.classList.add('active');
+        if(window.innerWidth<=768)sidebar.classList.toggle('show-mobile');
+      });
+      
+      document.getElementById('homeBtn').onclick=()=>document.querySelector('.side-link[data-section="about"]').click();
+      
+      const timeEl=document.getElementById('timeDisplay');
+      function updateTime(){
+        timeEl.textContent=new Date().toLocaleString('zh-CN',{hour12:false}).replace(/\//g,'-');
+      }
+      updateTime();
+      setInterval(updateTime,1000);
+      
+      // 窗口大小变化时处理菜单按钮显示
+      window.addEventListener('resize', () => {
+        if(window.innerWidth <= 768) {
+          mobileBtn.style.display = 'flex';
+        } else {
+          mobileBtn.style.display = 'none';
+          sidebar.classList.remove('show-mobile');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
