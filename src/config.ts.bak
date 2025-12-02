@@ -58,7 +58,6 @@ export const siteConfig: SiteConfig = {
 	],
 	officialSites: [
 		{ url: "https://fuwari-cc3.pages.dev/",alias:"CloudFlare（临时）" },
-		{ url: "https://tangjunkai.eu.org/",alias:"CloudFlare" },
 		{ url: "https://tangjunkai.vercel.app/", alias: "Vercel" },
 		{ url: "http://localhost:4321", alias: "Dev" }
 	
