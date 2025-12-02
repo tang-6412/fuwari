@@ -8,11 +8,13 @@
 
 ## 开源性质
 
-**本网站使用了 二叉树树 修改的开源项目 Fuwari**
+**本网站使用并修改了 [二叉树树](https://2x.nz) 修改的开源项目 Fuwari**
 如有侵权，联系删除
 ::github{repo="afoim/fuwari"}
 **本项目开源链接**
 ::github{repo="tang-6412/fuwari"}
+**fuwari原版**
+::github{repo="saicaca/fuwari"}
 
 ## 网站性质
 
@@ -32,12 +34,14 @@
 **Vercel**
 - 可能收集的信息：IP 地址、访问日志、性能数据
 - 用途：网站托管
+- 主域名：[tangjunkai.vercel.app](https://tangjunkai.vercel.app/)
 
 **CloudFlare**
 
 - 可能收集的信息：IP 地址、访问时间、请求的页面、浏览器信息
 - 用途：提供 CDN 服务、网站托管
-- 主域名：fuwari-cc3.pages.dev
+- 主域名：[tangjunkai.eu.org](https://tangjunkai.eu.org)
+- 备域名：[fuwari-cc3.pages.dev](https://fuwari-cc3.pages.dev)
 
 ## Cookie 和本地存储
 
@@ -100,4 +104,4 @@
 
 *本隐私政策旨在透明地说明我们的数据处理实践。我们建议您定期查看本政策以了解任何更新。*
 
-**修改自2x.nz**
+修改自[2x.nz](https://2x.nz/about/)
