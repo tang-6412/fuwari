@@ -86,7 +86,7 @@ export const navBarConfig: NavBarConfig = {
 export const profileConfig: ProfileConfig = {
 	avatar: "/favicon/ht.jpg", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
 	name: "tangjunkai",
-	bio: "Never Gonna Give You UP.",
+	bio: "Ciallo～(∠・ω< )⌒★",
 	links: [
 		{
 			name: "Bilibli",

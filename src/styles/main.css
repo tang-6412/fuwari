@@ -139,17 +139,17 @@
 .collapsed {
     height: var(--collapsedHeight);
 }
-/* 先声明字体 */
+
 @font-face {
   font-family: '霞鹜文楷';
   src: url('/fonts/lxgw/LXGWWenKai-Regular.woff2') format('woff2'),
        url('/fonts/lxgw/LXGWWenKai-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
-  font-display: swap; /* 这个属性也能让加载体验更好 */
+  font-display: swap; 
 }
 
-/* 再应用到全局 */
+
 body {
   font-family: '霞鹜文楷', sans-serif;
 }

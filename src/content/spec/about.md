@@ -2,19 +2,22 @@
 
 最后更新日期：2025年12月
 
+![](../assets/images/kl.png)
+
 ## 概述
 
 本网站是一个静态网站，采用Fuwari框架，并使用MIT协议开源于Github，我们非常重视您的隐私。本隐私政策说明了当您访问我们的网站时，可能收集、使用和披露您信息的方式。
 <small>
-> 页面字体采用由落霞孤鹜开发的霞鹜文楷 (LXGW WenKai)，这是一款开源中文字体，项目地址：[https://github.com/lxgw/LxgwWenKai](https://github.com/lxgw/LxgwWenKai)，字体以 SIL Open Font License 1.1 协议开源。</small>
+> - 页面字体采用由落霞孤鹜开发的霞鹜文楷 (LXGW WenKai)，这是一款开源中文字体，项目地址：[https://github.com/lxgw/LxgwWenKai](https://github.com/lxgw/LxgwWenKai)，字体以 SIL Open Font License 1.1 协议开源。<br>
+> - 本站背景图片由 [二叉树树](https://2x.nz) 开发的 [二次元随机图 API ](https://blog.2b2x.cn/posts/acg-randompic-api/) 提供，感谢开源分享！ </small>
 ## 开源性质
 
-**本网站使用并修改了 [二叉树树](https://2x.nz) 修改的开源项目 Fuwari**<br>
+**本站使用并修改了 [二叉树树](https://2x.nz) 修改的开源项目 Fuwari**<br>
 <small>如有侵权，联系删除</small>
 ::github{repo="afoim/fuwari"}
 **本项目开源链接**
 ::github{repo="tang-6412/fuwari"}
-**fuwari原版**
+**原版fuwari**
 ::github{repo="saicaca/fuwari"}
 
 ## 网站性质
@@ -92,8 +95,8 @@
 ## 滥用与版权举报
 
 如果您发现网站内容存在滥用、侵权或其他违法违规行为，请通过以下方式联系我们：
-- **邮箱**：234001931@qq.com
-- **Telegram**：https://t.me/THJUKD124
+> **邮箱**：234001931@qq.com <br>
+> **Telegram**：https://t.me/THJUKD124
 
 我们将认真对待每一个举报，并在收到举报后及时处理相关问题。
 

@@ -10,7 +10,7 @@ lang: ""
 ---
 > Ciallo
 > 
-> [项目github](https://github.com/tang-6412/fuwari-2x)
+> [项目github](https://github.com/tang-6412/fuwari)
 > 
 
 # 开头

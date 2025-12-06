@@ -19,7 +19,6 @@ lang: ""
 
 ## 邮箱
 
->234001931@qq.com
-或
+>234001931@qq.com <br>
 >tangjunkai6412@gmail.com
 
