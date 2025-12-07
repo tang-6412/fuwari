@@ -146,7 +146,7 @@ title: Fuwari搭建教程
    
    - 随后，让我们提交所有文件：`git add .`
    
-   - 之后，让我们发布一个本地提交：`git commit -m "更新名称可以自己填"`
+   - 之后，让我们发布一个本地提交：`git commit -m "更新描述"`
    
    - 最后，让我们将本地更改提交到远程仓库：`git push`。它会先让你输入用户名，然后让你输入Github Token（不是登录密码）。![](../assets/images/Pastedimage20251202131504.jpg)
 2. 此时，你的Github仓库应该已经有了新的提交
