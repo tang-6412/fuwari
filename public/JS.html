@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>单事件计数记录器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #000;
+            color: #fff;
+            min-height: 100vh;
+            padding: 30px 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: sans-serif;
+        }
+        h1 {
+            color: #eee;
+            margin-bottom: 5px;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+        .version {
+            color: #888;
+            font-size: 12px;
+            margin-bottom: 12px;
+        }
+        .current-time {
+            color: #ccc;
+            font-size: 14px;
+            margin-bottom: 15px;
+            text-shadow: 0 0 5px rgba(204,204,204,0.3);
+        }
+        .count-show {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2196F3;
+            margin: 10px 0 25px;
+            text-shadow: 0 0 10px rgba(33, 150, 243, 0.5);
+        }
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #fff;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
+            margin: 0 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.7);
+        }
+        .add-btn {
+            padding: 15px 35px;
+            font-size: 16px;
+            background: rgba(33, 150, 243, 0.3);
+            border: 1px solid rgba(33, 150, 243, 0.5);
+            margin-bottom: 30px;
+        }
+        .exp-btn {
+            background: rgba(76, 175, 80, 0.3);
+            border: 1px solid rgba(76, 175, 80, 0.5);
+        }
+        .imp-btn {
+            background: rgba(255, 152, 0, 0.3);
+            border: 1px solid rgba(255, 152, 0, 0.5);
+        }
+        .clr-btn {
+            background: rgba(244, 67, 54, 0.3);
+            border: 1px solid rgba(244, 67, 54, 0.5);
+        }
+        .del-btn {
+            padding: 8px 15px;
+            font-size: 12px;
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid rgba(244, 67, 54, 0.4);
+            margin: 0;
+        }
+        .page-btn {
+            padding: 8px 16px;
+            font-size: 13px;
+            background: rgba(158,158,158,0.3);
+            border: 1px solid rgba(158,158,158,0.5);
+            margin: 0 5px;
+        }
+        .page-btn.active {
+            background: rgba(33, 150, 243, 0.5);
+            border-color: rgba(33, 150, 243, 0.8);
+        }
+        table {
+            width: 90%;
+            max-width: 580px;
+            border-collapse: collapse;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        th,td {
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 12px 8px;
+            text-align: center;
+            font-size: 14px;
+        }
+        th {
+            background: rgba(255,255,255,0.1);
+            font-weight: 500;
+        }
+        #fileInput {
+            display: none;
+        }
+        .pagination {
+            margin: 20px 0 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .opt-group {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>单事件计数记录器</h1>
+    <div class="version">版本号：20260102020453</div>
+    <div class="current-time" id="currentTime"></div>
+    <div class="count-show">当前累计：第 <span id="totalCount">0</span> 次</div>
+    <button class="btn add-btn" onclick="addRecord()">添加记录</button>
+
+    <table>
+        <thead>
+            <tr>
+                <th>序号</th>
+                <th>日期</th>
+                <th>时间</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody id="recordList"></tbody>
+    </table>
+    <div class="pagination" id="pagination"></div>
+
+    <div class="opt-group">
+        <button class="btn exp-btn" onclick="exportRecords()">导出记录</button>
+        <button class="btn imp-btn" onclick="document.getElementById('fileInput').click()">导入记录</button>
+        <input type="file" id="fileInput" accept=".json" onchange="importRecords()" />
+        <button class="btn clr-btn" onclick="clearAllRecords()">清空所有记录</button>
+    </div>
+
+    <script>
+        const STORAGE_KEY = "singleEventRecord";
+        const COOKIE_KEY = "eventRecordCookie";
+        const COOKIE_EXPIRE_DAYS = 365;
+        const PAGE_SIZE = 15;
+        let currentPage = 1;
+
+        // 实时更新当前时间
+        function updateCurrentTime() {
+            const now = new Date();
+            const timeStr = now.toLocaleString("zh-CN", {year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit"});
+            document.getElementById("currentTime").innerText = `当前时间：${timeStr}`;
+        }
+        setInterval(updateCurrentTime, 1000);
+        updateCurrentTime();
+
+        // Cookie 操作
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
+        }
+        function setCookie(name, value) {
+            const date = new Date();
+            date.setTime(date.getTime()+(COOKIE_EXPIRE_DAYS*24*60*60*1000));
+            const expires = `expires=${date.toUTCString()}`;
+            document.cookie = `${name}=${value}; ${expires}; path=/`;
+        }
+        function deleteCookie(name) {
+            document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+        }
+
+        // 数据读写
+        function getRecords() {
+            let records = localStorage.getItem(STORAGE_KEY);
+            if (!records) {
+                records = getCookie(COOKIE_KEY);
+                if (records) localStorage.setItem(STORAGE_KEY, records);
+            }
+            return records ? JSON.parse(records) : [];
+        }
+        function saveRecords(records) {
+            const str = JSON.stringify(records);
+            localStorage.setItem(STORAGE_KEY, str);
+            setCookie(COOKIE_KEY, str);
+        }
+
+        // 获取总页数
+        function getTotalPage() {
+            const records = getRecords();
+            return Math.ceil(records.length / PAGE_SIZE);
+        }
+
+        // 核心定稿：序号+分页双精准
+        function loadRecordsByPage(page) {
+            const records = getRecords();
+            const totalEl = document.getElementById("totalCount");
+            const listEl = document.getElementById("recordList");
+            const pageEl = document.getElementById("pagination");
+            totalEl.innerText = records.length;
+            listEl.innerHTML = "";
+            pageEl.innerHTML = "";
+
+            // 1. 原始数组正序 = 按点击时间排序（第1次=最旧，最后1次=最新），永久固定
+            const originOrderRecords = [...records].sort((a,b) => new Date(a.createTime) - new Date(b.createTime));
+            // 2. 分页显示数组倒序 = 最新记录在前，第一页显示最新15条
+            const showOrderRecords = [...records].sort((a,b) => new Date(b.createTime) - new Date(a.createTime));
+            
+            const totalPage = getTotalPage();
+            currentPage = page < 1 ? 1 : page > totalPage ? totalPage : page;
+            const start = (currentPage - 1) * PAGE_SIZE;
+            const end = Math.min(start + PAGE_SIZE, showOrderRecords.length);
+            const currentShowRecords = showOrderRecords.slice(start, end);
+
+            // 3. 渲染：无论显示在哪一页，序号永远是原始点击顺序（第1次=最旧，不随分页/排序变）
+            currentShowRecords.forEach(item => {
+                const originIndex = originOrderRecords.findIndex(r => r.createTime === item.createTime);
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>第${originIndex + 1}次</td>
+                    <td>${item.date}</td>
+                    <td>${item.time}</td>
+                    <td><button class="btn del-btn" onclick="deleteSingleRecord(${originIndex})">删除</button></td>
+                `;
+                listEl.appendChild(tr);
+            });
+
+            // 渲染分页按钮
+            for(let i=1; i<=totalPage; i++){
+                const btn = document.createElement("button");
+                btn.className = `btn page-btn ${i === currentPage ? 'active' : ''}`;
+                btn.innerText = i;
+                btn.onclick = () => loadRecordsByPage(i);
+                pageEl.appendChild(btn);
+            }
+        }
+
+        // 单条删除：按原始序号删除，删除后序号自动衔接
+        function deleteSingleRecord(originIndex) {
+            if (!confirm("确认删除这条记录吗？删除后剩余记录序号会自动衔接！")) return;
+            let records = getRecords();
+            records.splice(originIndex, 1);
+            saveRecords(records);
+            loadRecordsByPage(currentPage);
+        }
+
+        // 新增记录：新增后回到第一页（最新记录页），新增项为最新一条、序号为总次数+1
+        function addRecord() {
+            const now = new Date();
+            const newRecord = {
+                date: now.toLocaleDateString(),
+                time: now.toLocaleTimeString(),
+                createTime: now.getTime()
+            };
+            const records = getRecords();
+            records.push(newRecord);
+            saveRecords(records);
+            loadRecordsByPage(1);
+        }
+
+        // 导出记录
+        function exportRecords() {
+            const records = getRecords();
+            if (!records.length) {alert("暂无记录可导出！"); return;}
+            const content = JSON.stringify(records, null, 2);
+            const blob = new Blob([content], {type: "application/json;charset=utf-8"});
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = `事件记录_${new Date().toLocaleDateString()}.json`;
+            a.click();
+            URL.revokeObjectURL(a.href);
+        }
+
+        // 导入记录
+        function importRecords() {
+            const file = document.getElementById("fileInput").files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (!Array.isArray(imported)) throw new Error("格式错误");
+                    const current = getRecords();
+                    const merged = [...current, ...imported];
+                    saveRecords(merged);
+                    loadRecordsByPage(1);
+                    alert(`成功导入${imported.length}条记录！`);
+                } catch (err) {
+                    alert("导入失败：文件格式错误或内容无效！");
+                }
+            };
+            reader.readAsText(file);
+            document.getElementById("fileInput").value = "";
+        }
+
+        // 清空记录
+        function clearAllRecords() {
+            if (!confirm("确认清空所有记录？清空后无法恢复！")) return;
+            localStorage.removeItem(STORAGE_KEY);
+            deleteCookie(COOKIE_KEY);
+            loadRecordsByPage(1);
+        }
+
+        // 页面加载默认第一页（最新记录页）
+        window.onload = () => loadRecordsByPage(1);
+    </script>
+</body>
+</html>
