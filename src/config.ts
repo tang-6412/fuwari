@@ -6,16 +6,13 @@ import type {
 	NavBarConfig,
 	ProfileConfig,
 	SiteConfig,
-	UmamiConfig,
 } from "./types/config";
 import { LinkPreset } from "./types/config";
-
 export const siteConfig: SiteConfig = {
 	title: "TangJunkai's Blog",
 	subtitle: "基于魔改Fuwari",
 	description:
 		"一个很详细的网站简介（？）",
-
 	keywords: [],
 	lang: "zh_CN", // 'en', 'zh_CN', 'zh_TW', 'ja', 'ko', 'es', 'th'
 	themeColor: {
@@ -26,18 +23,16 @@ export const siteConfig: SiteConfig = {
 	banner: {
 		enable: false,
 		src: "/xinghui.avif", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
-
 		position: "center", // Equivalent to object-position, only supports 'top', 'center', 'bottom'. 'center' by default
 		credit: {
 			enable: true, // Display the credit text of the banner image
 			text: "Pixiv @chokei", // Credit text to be displayed
-
 			url: "https://www.pixiv.net/artworks/122782209", // (Optional) URL link to the original artwork or artist's page
 		},
 	},
 	background: {
 		enable: true, // Enable background image
-		src: "https://eopfapi.b.2.f.f.0.7.4.0.1.0.0.2.ip6.arpa/pic?img=ua", // Background image URL (supports HTTPS)
+		src: "https://eopfapi.acofork.com/pic?img=ua", 
 		position: "center", // Background position: 'top', 'center', 'bottom'
 		size: "cover", // Background size: 'cover', 'contain', 'auto'
 		repeat: "no-repeat", // Background repeat: 'no-repeat', 'repeat', 'repeat-x', 'repeat-y'
@@ -51,7 +46,7 @@ export const siteConfig: SiteConfig = {
 	favicon: [
 		// 网页图标 https://q2.qlogo.cn/headimg_dl?dst_uin=2726730791&spec=0
 		{
-			src: "/favicon/ht.jpg", // Path of the favicon, relative to the /public directory
+			src: "/favicon/liuy.jpg", // Path of the favicon, relative to the /public directory
 			//   theme: 'light',              // (Optional) Either 'light' or 'dark', set only if you have different favicons for light and dark mode
 			//   sizes: '32x32',              // (Optional) Size of the favicon, set only if you have favicons of different sizes
 		},
@@ -64,7 +59,6 @@ export const siteConfig: SiteConfig = {
 	
 	],
 };
-
 export const navBarConfig: NavBarConfig = {
 	links: [
 		LinkPreset.Home,
@@ -82,9 +76,8 @@ export const navBarConfig: NavBarConfig = {
 		},
 	],
 };
-
 export const profileConfig: ProfileConfig = {
-	avatar: "/favicon/ht.jpg", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
+	avatar: "/favicon/ht.jpeg", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
 	name: "tangjunkai",
 	bio: "Ciallo～(∠・ω< )⌒★",
 	links: [
@@ -100,40 +93,20 @@ export const profileConfig: ProfileConfig = {
 		},
 	],
 };
-
 export const licenseConfig: LicenseConfig = {
 	enable: true,
 	name: "CC BY-NC-SA 4.0",
 	url: "https://creativecommons.org/licenses/by-nc-sa/4.0/",
 };
-
 export const imageFallbackConfig: ImageFallbackConfig = {
 	enable: true,
 	originalDomain: "eopfapi.2b2x.cn",
 	fallbackDomain: "eopfapi.b.2.f.f.0.7.4.0.1.0.0.2.ip6.arpa/pic?img=ua",
 };
-
-export const umamiConfig: UmamiConfig = {
-	enable: true,
-	baseUrl: "https://cloud.umami.is",
-	shareId: "hN3l7PGcxsUCBHfU",
-	timezone: "Asia/Shanghai",
-};
-
 export const expressiveCodeConfig: ExpressiveCodeConfig = {
 	theme: "github-dark",
 };
-
 export const gitHubEditConfig: GitHubEditConfig = {
 	enable: true,
 	baseUrl: "https://github.com/tang-6412/fuwari/blob/main/src/content/posts",
-};
-
-
-export const statsConfig = {
-	viewsText: "浏览",
-	visitsText: "访客",
-	loadingText: "统计加载中...",
-	unavailableText: "统计不可用。请检查是否屏蔽了Umami域名，如AdGuard和AdBlock等插件",
-	getStatsText: (pageViews: number, visits: number) => `${statsConfig.viewsText} ${pageViews} · ${statsConfig.visitsText} ${visits}`,
 };
