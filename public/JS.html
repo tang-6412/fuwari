@@ -2,338 +2,486 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>单事件计数记录器</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: "Microsoft Yahei", sans-serif;
         }
         body {
-            background-color: #000;
-            color: #fff;
+            background-color: #000000;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
             min-height: 100vh;
-            padding: 30px 15px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-family: sans-serif;
         }
-        h1 {
-            color: #eee;
-            margin-bottom: 5px;
-            font-weight: 500;
-            letter-spacing: 1px;
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #f5f5f5;
         }
-        .version {
-            color: #888;
+        .storage-note {
             font-size: 12px;
-            margin-bottom: 12px;
-        }
-        .current-time {
-            color: #ccc;
-            font-size: 14px;
-            margin-bottom: 15px;
-            text-shadow: 0 0 5px rgba(204,204,204,0.3);
-        }
-        .count-show {
-            font-size: 28px;
-            font-weight: bold;
-            color: #2196F3;
-            margin: 10px 0 25px;
-            text-shadow: 0 0 10px rgba(33, 150, 243, 0.5);
-        }
-        .btn {
-            padding: 12px 20px;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 14px;
-            color: #fff;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            transition: all 0.3s ease;
-            margin: 0 8px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.7);
-        }
-        .add-btn {
-            padding: 15px 35px;
-            font-size: 16px;
-            background: rgba(33, 150, 243, 0.3);
-            border: 1px solid rgba(33, 150, 243, 0.5);
-            margin-bottom: 30px;
-        }
-        .exp-btn {
-            background: rgba(76, 175, 80, 0.3);
-            border: 1px solid rgba(76, 175, 80, 0.5);
-        }
-        .imp-btn {
-            background: rgba(255, 152, 0, 0.3);
-            border: 1px solid rgba(255, 152, 0, 0.5);
-        }
-        .clr-btn {
-            background: rgba(244, 67, 54, 0.3);
-            border: 1px solid rgba(244, 67, 54, 0.5);
-        }
-        .del-btn {
-            padding: 8px 15px;
-            font-size: 12px;
-            background: rgba(244, 67, 54, 0.2);
-            border: 1px solid rgba(244, 67, 54, 0.4);
-            margin: 0;
-        }
-        .page-btn {
-            padding: 8px 16px;
-            font-size: 13px;
-            background: rgba(158,158,158,0.3);
-            border: 1px solid rgba(158,158,158,0.5);
-            margin: 0 5px;
-        }
-        .page-btn.active {
-            background: rgba(33, 150, 243, 0.5);
-            border-color: rgba(33, 150, 243, 0.8);
-        }
-        table {
-            width: 90%;
-            max-width: 580px;
-            border-collapse: collapse;
+            color: #999;
+            margin-top: 10px;
+            padding: 8px;
             background: rgba(255,255,255,0.05);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            border-radius: 10px;
-            overflow: hidden;
+            border-radius: 6px;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 20px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            color: #f5f5f5;
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
             margin-bottom: 20px;
         }
-        th,td {
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 12px 8px;
-            text-align: center;
-            font-size: 14px;
+        .record-btn, .custom-btn {
+            flex: 1;
+            padding: 18px;
+            border-radius: 12px;
+            backdrop-filter: blur(12px);
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid transparent;
         }
-        th {
+        .record-btn {
+            background: rgba(76,175,80,0.15);
+            border-color: rgba(76,175,80,0.3);
+        }
+        .record-btn:hover {
+            background: rgba(76,175,80,0.25);
+            border-color: rgba(76,175,80,0.5);
+        }
+        .custom-btn {
+            background: rgba(33,150,243,0.15);
+            border-color: rgba(33,150,243,0.3);
+        }
+        .custom-btn:hover {
+            background: rgba(33,150,243,0.25);
+            border-color: rgba(33,150,243,0.5);
+        }
+        .record-list {
             background: rgba(255,255,255,0.1);
-            font-weight: 500;
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            max-height: 450px;
+            overflow-y: auto;
         }
-        #fileInput {
-            display: none;
+        .record-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .record-item:last-child {
+            border-bottom: none;
+        }
+        .record-index {
+            font-weight: bold;
+            color: #f5f5f5;
+            width: 60px;
+        }
+        .record-time {
+            color: #e0e0e0;
+            flex: 1;
+            text-align: center;
+        }
+        .del-btn {
+            padding: 6px 12px;
+            border: 1px solid rgba(244,67,54,0.3);
+            border-radius: 6px;
+            background: rgba(244,67,54,0.15);
+            color: #fff;
+            cursor: pointer;
+            font-size: 14px;
+            backdrop-filter: blur(8px);
+            transition: all 0.3s;
+        }
+        .del-btn:hover{
+            background: rgba(244,67,54,0.25);
+            border-color: rgba(244,67,54,0.5);
         }
         .pagination {
-            margin: 20px 0 25px;
             display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .opt-group {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
             justify-content: center;
             gap: 10px;
-            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+        .page-btn {
+            padding: 8px 15px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 6px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(8px);
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #e0e0e0;
+        }
+        .page-btn.active {
+            background: rgba(33,150,243,0.25);
+            color: #fff;
+            border-color: rgba(33,150,243,0.5);
+        }
+        .page-btn:hover:not(.active) {
+            background: rgba(255,255,255,0.15);
+        }
+        .operate-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .operate-btn {
+            padding: 10px 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            backdrop-filter: blur(8px);
+            color: #fff;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        .import-btn {
+            background: rgba(156,39,176,0.15);
+        }
+        .import-btn:hover{
+            background: rgba(156,39,176,0.25);
+            border-color: rgba(156,39,176,0.5);
+        }
+        .export-btn {
+            background: rgba(255,152,0,0.15);
+        }
+        .export-btn:hover{
+            background: rgba(255,152,0,0.25);
+            border-color: rgba(255,152,0,0.5);
+        }
+        .clear-btn {
+            background: rgba(244,67,54,0.15);
+        }
+        .clear-btn:hover{
+            background: rgba(244,67,54,0.25);
+            border-color: rgba(244,67,54,0.5);
+        }
+        /* 安卓原生弹窗适配 */
+        .custom-time-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            padding: 20px;
+        }
+        .modal-content {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            padding: 25px;
+            width: 100%;
+            max-width: 400px;
+        }
+        .modal-title {
+            color: #fff;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        .time-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .time-input {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(0,0,0,0.3);
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+        }
+        .time-input::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+        }
+        .modal-btn-group {
+            display: flex;
+            gap: 10px;
+        }
+        .confirm-btn, .cancel-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .confirm-btn {
+            background: rgba(76,175,80,0.7);
+        }
+        .cancel-btn {
+            background: rgba(244,67,54,0.7);
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.15);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.25);
         }
     </style>
 </head>
 <body>
-    <h1>单事件计数记录器</h1>
-    <div class="version">版本号：20260102020453</div>
-    <div class="current-time" id="currentTime"></div>
-    <div class="count-show">当前累计：第 <span id="totalCount">0</span> 次</div>
-    <button class="btn add-btn" onclick="addRecord()">添加记录</button>
-
-    <table>
-        <thead>
-            <tr>
-                <th>序号</th>
-                <th>日期</th>
-                <th>时间</th>
-                <th>操作</th>
-            </tr>
-        </thead>
-        <tbody id="recordList"></tbody>
-    </table>
-    <div class="pagination" id="pagination"></div>
-
-    <div class="opt-group">
-        <button class="btn exp-btn" onclick="exportRecords()">导出记录</button>
-        <button class="btn imp-btn" onclick="document.getElementById('fileInput').click()">导入记录</button>
-        <input type="file" id="fileInput" accept=".json" onchange="importRecords()" />
-        <button class="btn clr-btn" onclick="clearAllRecords()">清空所有记录</button>
+    <div class="header">
+        <h1>单事件计数记录器</h1>
+        <p>https://tangjunkai.eu.org/JS</p>
+        <div class="storage-note">
+            本地存储声明：您的所有记录仅保存在当前浏览器的 localStorage 中，不会上传至任何服务器，数据安全由您的浏览器环境负责。
+        </div>
     </div>
-
+    <div class="stats">
+        <span id="current-time">时间：</span>
+        <span id="total-count">累计：0 次</span>
+    </div>
+    <div class="btn-group">
+        <button class="record-btn" id="add-record-btn">记录当前时间</button>
+        <button class="custom-btn" id="add-custom-btn">使用自定时间</button>
+    </div>
+    <div class="record-list" id="record-container"></div>
+    <div class="pagination" id="pagination"></div>
+    <div class="operate-group">
+        <button class="operate-btn import-btn" id="import-btn">导入</button>
+        <button class="operate-btn export-btn" id="export-btn">导出</button>
+        <button class="operate-btn clear-btn" id="clear-btn">清空</button>
+    </div>
+    <!-- 安卓原生时间选择弹窗 -->
+    <div class="custom-time-modal" id="time-modal">
+        <div class="modal-content">
+            <h3 class="modal-title">自定义时间</h3>
+            <div class="time-input-group">
+                <input type="date" class="time-input" id="date-picker" value="">
+                <input type="time" class="time-input" id="time-picker" value="">
+            </div>
+            <div class="modal-btn-group">
+                <button class="confirm-btn" id="confirm-time">确认记录</button>
+                <button class="cancel-btn" id="cancel-time">取消</button>
+            </div>
+        </div>
+    </div>
     <script>
-        const STORAGE_KEY = "singleEventRecord";
-        const COOKIE_KEY = "eventRecordCookie";
-        const COOKIE_EXPIRE_DAYS = 365;
         const PAGE_SIZE = 15;
+        let records = JSON.parse(localStorage.getItem('eventRecords')) || [];
         let currentPage = 1;
-
-        // 实时更新当前时间
+        const timeModal = document.getElementById('time-modal');
+        const datePicker = document.getElementById('date-picker');
+        const timePicker = document.getElementById('time-picker');
+        // 初始化时间选择器默认值为当前时间
+        const now = new Date();
+        const defaultDate = now.toISOString().split('T')[0];
+        const defaultTime = now.toTimeString().split(' ')[0].slice(0,5);
+        datePicker.value = defaultDate;
+        timePicker.value = defaultTime;
+        // 实时时间更新
         function updateCurrentTime() {
             const now = new Date();
-            const timeStr = now.toLocaleString("zh-CN", {year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit"});
-            document.getElementById("currentTime").innerText = `当前时间：${timeStr}`;
+            const formatTime = now.toLocaleString('zh-CN', {year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'});
+            document.getElementById('current-time').textContent = `时间：${formatTime}`;
         }
         setInterval(updateCurrentTime, 1000);
         updateCurrentTime();
-
-        // Cookie 操作
-        function getCookie(name) {
-            const value = `; ${document.cookie}`;
-            const parts = value.split(`; ${name}=`);
-            if (parts.length === 2) return parts.pop().split(';').shift();
-            return null;
+        // 更新累计次数
+        function updateTotalCount() {
+            const count = records.length;
+            document.getElementById('total-count').textContent = `累计：${count === 0 ? '?' : count}次`;
         }
-        function setCookie(name, value) {
-            const date = new Date();
-            date.setTime(date.getTime()+(COOKIE_EXPIRE_DAYS*24*60*60*1000));
-            const expires = `expires=${date.toUTCString()}`;
-            document.cookie = `${name}=${value}; ${expires}; path=/`;
+        // 记录当前时间
+        document.getElementById('add-record-btn').addEventListener('click', () => {
+            addNewRecord(new Date());
+        });
+        // 打开自定义时间弹窗（调用原生控件）
+        document.getElementById('add-custom-btn').addEventListener('click', () => {
+            timeModal.style.display = 'flex';
+        });
+        // 取消弹窗
+        document.getElementById('cancel-time').addEventListener('click', () => {
+            timeModal.style.display = 'none';
+        });
+        // 确认自定义时间记录
+        document.getElementById('confirm-time').addEventListener('click', () => {
+            const selectDate = datePicker.value;
+            const selectTime = timePicker.value;
+            if(!selectDate || !selectTime) return alert('请选择完整时间');
+            const fullTime = `${selectDate} ${selectTime}`;
+            addNewRecord(new Date(fullTime));
+            timeModal.style.display = 'none';
+        });
+        // 新增记录核心
+        function addNewRecord(recordTime) {
+            const formatTime = recordTime.toLocaleString('zh-CN', {year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'});
+            records.unshift({ time: formatTime });
+            localStorage.setItem('eventRecords', JSON.stringify(records));
+            updateTotalCount();
+            currentPage = 1;
+            renderRecords();
+            renderPagination();
         }
-        function deleteCookie(name) {
-            document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-        }
-
-        // 数据读写
-        function getRecords() {
-            let records = localStorage.getItem(STORAGE_KEY);
-            if (!records) {
-                records = getCookie(COOKIE_KEY);
-                if (records) localStorage.setItem(STORAGE_KEY, records);
-            }
-            return records ? JSON.parse(records) : [];
-        }
-        function saveRecords(records) {
-            const str = JSON.stringify(records);
-            localStorage.setItem(STORAGE_KEY, str);
-            setCookie(COOKIE_KEY, str);
-        }
-
-        // 获取总页数
-        function getTotalPage() {
-            const records = getRecords();
-            return Math.ceil(records.length / PAGE_SIZE);
-        }
-
-        // 核心定稿：序号+分页双精准
-        function loadRecordsByPage(page) {
-            const records = getRecords();
-            const totalEl = document.getElementById("totalCount");
-            const listEl = document.getElementById("recordList");
-            const pageEl = document.getElementById("pagination");
-            totalEl.innerText = records.length;
-            listEl.innerHTML = "";
-            pageEl.innerHTML = "";
-
-            // 1. 原始数组正序 = 按点击时间排序（第1次=最旧，最后1次=最新），永久固定
-            const originOrderRecords = [...records].sort((a,b) => new Date(a.createTime) - new Date(b.createTime));
-            // 2. 分页显示数组倒序 = 最新记录在前，第一页显示最新15条
-            const showOrderRecords = [...records].sort((a,b) => new Date(b.createTime) - new Date(a.createTime));
-            
-            const totalPage = getTotalPage();
-            currentPage = page < 1 ? 1 : page > totalPage ? totalPage : page;
-            const start = (currentPage - 1) * PAGE_SIZE;
-            const end = Math.min(start + PAGE_SIZE, showOrderRecords.length);
-            const currentShowRecords = showOrderRecords.slice(start, end);
-
-            // 3. 渲染：无论显示在哪一页，序号永远是原始点击顺序（第1次=最旧，不随分页/排序变）
-            currentShowRecords.forEach(item => {
-                const originIndex = originOrderRecords.findIndex(r => r.createTime === item.createTime);
-                const tr = document.createElement("tr");
-                tr.innerHTML = `
-                    <td>第${originIndex + 1}次</td>
-                    <td>${item.date}</td>
-                    <td>${item.time}</td>
-                    <td><button class="btn del-btn" onclick="deleteSingleRecord(${originIndex})">删除</button></td>
+        // 渲染记录+精准删除
+        function renderRecords() {
+            const container = document.getElementById('record-container');
+            container.innerHTML = '';
+            const startIdx = (currentPage - 1) * PAGE_SIZE;
+            const endIdx = startIdx + PAGE_SIZE;
+            const currentRecords = records.slice(startIdx, endIdx);
+            currentRecords.forEach((item, index) => {
+                const realIndex = records.length - startIdx - index;
+                const realArrayIndex = startIdx + index;
+                const recordItem = document.createElement('div');
+                recordItem.className = 'record-item';
+                recordItem.innerHTML = `
+                    <span class="record-index">第${realIndex}次</span>
+                    <span class="record-time">${item.time}</span>
+                    <button class="del-btn" data-index="${realArrayIndex}">删除</button>
                 `;
-                listEl.appendChild(tr);
+                container.appendChild(recordItem);
             });
-
-            // 渲染分页按钮
-            for(let i=1; i<=totalPage; i++){
-                const btn = document.createElement("button");
-                btn.className = `btn page-btn ${i === currentPage ? 'active' : ''}`;
-                btn.innerText = i;
-                btn.onclick = () => loadRecordsByPage(i);
-                pageEl.appendChild(btn);
+            document.querySelectorAll('.del-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    records.splice(parseInt(e.target.dataset.index), 1);
+                    localStorage.setItem('eventRecords', JSON.stringify(records));
+                    updateTotalCount();
+                    const totalPage = Math.ceil(records.length / PAGE_SIZE);
+                    currentPage = currentPage > totalPage && totalPage > 0 ? totalPage : currentPage;
+                    renderRecords();
+                    renderPagination();
+                });
+            });
+        }
+        // 渲染分页
+        function renderPagination() {
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = '';
+            const totalPage = Math.ceil(records.length / PAGE_SIZE);
+            if(totalPage <= 1) return;
+            for(let i = 1; i <= totalPage; i++) {
+                const pageBtn = document.createElement('button');
+                pageBtn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
+                pageBtn.textContent = i;
+                pageBtn.onclick = () => { currentPage = i; renderRecords(); renderPagination(); };
+                pagination.appendChild(pageBtn);
             }
         }
-
-        // 单条删除：按原始序号删除，删除后序号自动衔接
-        function deleteSingleRecord(originIndex) {
-            if (!confirm("确认删除这条记录吗？删除后剩余记录序号会自动衔接！")) return;
-            let records = getRecords();
-            records.splice(originIndex, 1);
-            saveRecords(records);
-            loadRecordsByPage(currentPage);
-        }
-
-        // 新增记录：新增后回到第一页（最新记录页），新增项为最新一条、序号为总次数+1
-        function addRecord() {
+        // 导出：带精确时分秒的唯一文件名
+        function getExportFileName() {
             const now = new Date();
-            const newRecord = {
-                date: now.toLocaleDateString(),
-                time: now.toLocaleTimeString(),
-                createTime: now.getTime()
-            };
-            const records = getRecords();
-            records.push(newRecord);
-            saveRecords(records);
-            loadRecordsByPage(1);
+            const year = now.getFullYear();
+            const month = (now.getMonth()+1).toString().padStart(2, '0');
+            const day = now.getDate().toString().padStart(2, '0');
+            const hour = now.getHours().toString().padStart(2, '0');
+            const minute = now.getMinutes().toString().padStart(2, '0');
+            const second = now.getSeconds().toString().padStart(2, '0');
+            return `计数记录_${year}${month}${day}_${hour}${minute}${second}.json`;
         }
-
-        // 导出记录
-        function exportRecords() {
-            const records = getRecords();
-            if (!records.length) {alert("暂无记录可导出！"); return;}
-            const content = JSON.stringify(records, null, 2);
-            const blob = new Blob([content], {type: "application/json;charset=utf-8"});
-            const a = document.createElement("a");
+        document.getElementById('export-btn').addEventListener('click', () => {
+            if(!records.length) return alert('你导出空气呢');
+            const exportData = records.map((item, index) => ({序号: records.length - index, 记录时间: item.time}));
+            const blob = new Blob([JSON.stringify(exportData, null, 2)], {type: 'application/json'});
+            const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
-            a.download = `事件记录_${new Date().toLocaleDateString()}.json`;
+            a.download = getExportFileName();
             a.click();
             URL.revokeObjectURL(a.href);
-        }
-
-        // 导入记录
-        function importRecords() {
-            const file = document.getElementById("fileInput").files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const imported = JSON.parse(e.target.result);
-                    if (!Array.isArray(imported)) throw new Error("格式错误");
-                    const current = getRecords();
-                    const merged = [...current, ...imported];
-                    saveRecords(merged);
-                    loadRecordsByPage(1);
-                    alert(`成功导入${imported.length}条记录！`);
-                } catch (err) {
-                    alert("导入失败：文件格式错误或内容无效！");
-                }
+        });
+        //导入
+        document.getElementById('import-btn').addEventListener('click', () => {
+            const input = document.createElement('input');
+            input.type = 'file'; input.accept = '.json';
+            input.onchange = (e) => {
+                const reader = new FileReader();
+                reader.onload = (res) => {
+                    try {
+                        const importRawData = JSON.parse(res.target.result);
+                        
+                        const importData = importRawData.map(item => {
+                            let recordTime = '';
+                            // 260106
+                            if (item.date && item.time) {
+                                // 转换为"yyyy-MM-dd HH:mm:ss"格式
+                                const dateObj = new Date(item.date + ' ' + item.time);
+                                recordTime = dateObj.toLocaleString('zh-CN', {year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'});
+                            } 
+                            
+                            else if (item.记录时间) {
+                                recordTime = item.记录时间;
+                            }
+                            
+                            else if (item.time) {
+                                recordTime = item.time;
+                            }
+                            return { time: recordTime };
+                        }).filter(item => item.time); 
+                        records = importData.reverse();
+                        localStorage.setItem('eventRecords', JSON.stringify(records));
+                        updateTotalCount();
+                        currentPage = 1;
+                        renderRecords();
+                        renderPagination();
+                        alert(`导入成功！共导入 ${importData.length} 条有效记录`);
+                    } catch (err) {
+                        alert('导入失败，文件格式错误（需为JSON格式）');
+                        console.error(err);
+                    }
+                };
+                reader.readAsText(e.target.files[0]);
             };
-            reader.readAsText(file);
-            document.getElementById("fileInput").value = "";
-        }
-
+            input.click();
+        });
         // 清空记录
-        function clearAllRecords() {
-            if (!confirm("确认清空所有记录？清空后无法恢复！")) return;
-            localStorage.removeItem(STORAGE_KEY);
-            deleteCookie(COOKIE_KEY);
-            loadRecordsByPage(1);
-        }
-
-        // 页面加载默认第一页（最新记录页）
-        window.onload = () => loadRecordsByPage(1);
+        document.getElementById('clear-btn').addEventListener('click', () => {
+            if(!confirm('确定清空？清空后无法恢复')) return;
+            records = [];
+            localStorage.removeItem('eventRecords');
+            updateTotalCount();
+            renderRecords();
+            renderPagination();
+        });
+        // 页面初始化
+        updateTotalCount();
+        renderRecords();
+        renderPagination();
     </script>
 </body>
 </html>
+-
