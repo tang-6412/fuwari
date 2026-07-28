@@ -32,12 +32,16 @@ export const siteConfig: SiteConfig = {
 	},
 	background: {
 		enable: true, // Enable background image
-		src: "https://eopfapi.acofork.com/pic?img=ua", 
+		src: "/bg/bg-desktop.jpg",
+		srcMobile: "/bg/bg-mobile.jpg",
 		position: "center", // Background position: 'top', 'center', 'bottom'
 		size: "cover", // Background size: 'cover', 'contain', 'auto'
 		repeat: "no-repeat", // Background repeat: 'no-repeat', 'repeat', 'repeat-x', 'repeat-y'
 		attachment: "fixed", // Background attachment: 'fixed', 'scroll', 'local'
 		opacity: 0.5, // Background opacity (0-1)
+	},
+	logo: {
+		src: "/logo/logo-chibi.jpg",
 	},
 	toc: {
 		enable: true, // Display the table of contents on the right side of the post
@@ -90,6 +94,11 @@ export const profileConfig: ProfileConfig = {
 			name: "GitHub",
 			icon: "fa6-brands:github",
 			url: "https://github.com/tang-6412",
+		},
+		{
+			name: "Email",
+			icon: "fa6-solid:envelope",
+			url: "mailto:234001931@qq.com",
 		},
 	],
 };

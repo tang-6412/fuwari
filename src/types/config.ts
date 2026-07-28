@@ -26,11 +26,15 @@ export type SiteConfig = {
 	background: {
 		enable: boolean;
 		src: string;
+		srcMobile?: string;
 		position?: "top" | "center" | "bottom";
 		size?: "cover" | "contain" | "auto";
 		repeat?: "no-repeat" | "repeat" | "repeat-x" | "repeat-y";
 		attachment?: "fixed" | "scroll" | "local";
 		opacity?: number;
+	};
+	logo?: {
+		src?: string;
 	};
 	toc: {
 		enable: boolean;

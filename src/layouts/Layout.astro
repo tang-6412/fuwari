@@ -186,6 +186,7 @@ const bannerOffset =
 			configHue,
 			'page-width': `${PAGE_WIDTH}rem`,
 			'bg-url': siteConfig.background.src ? `url(${siteConfig.background.src})` : 'none',
+			'bg-url-mobile': siteConfig.background.srcMobile ? `url(${siteConfig.background.srcMobile})` : (siteConfig.background.src ? `url(${siteConfig.background.src})` : 'none'),
 			'bg-enable': siteConfig.background.enable ? '1' : '0',
 			'bg-position': siteConfig.background.position || 'center',
 			'bg-size': siteConfig.background.size || 'cover',
@@ -195,6 +196,7 @@ const bannerOffset =
 		}}>
 			:root {
 				--bg-url: var(--bg-url);
+				--bg-url-mobile: var(--bg-url-mobile);
 				--bg-enable: var(--bg-enable);
 				--bg-position: var(--bg-position);
 				--bg-size: var(--bg-size);
@@ -206,6 +208,7 @@ const bannerOffset =
 			/* Background image configuration */
 			body {
 				--bg-url: var(--bg-url);
+				--bg-url-mobile: var(--bg-url-mobile);
 				--bg-enable: var(--bg-enable);
 				--bg-position: var(--bg-position);
 				--bg-size: var(--bg-size);
@@ -231,6 +234,12 @@ const bannerOffset =
 				z-index: -1 !important;
 				display: block !important;
 				transition: opacity 0.3s ease-in-out !important;
+			}
+
+			@media (max-width: 767px) {
+				body::before {
+					background-image: var(--bg-url-mobile) !important;
+				}
 			}
 			
 			body.bg-loaded::before {
