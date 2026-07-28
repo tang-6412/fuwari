@@ -3,6 +3,17 @@
 @layer components {
     .card-base {
         @apply rounded-[var(--radius-large)] overflow-hidden bg-[var(--card-bg)] transition;
+        /* 真毛玻璃效果:backdrop-filter 提供 blur + saturate */
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+    }
+    /* 当卡片被 LiquidCard(liquid-glass-react)包裹时,把自身背景透明掉
+       让 LiquidGlass 的 SVG displacement 折射效果显出来 */
+    .card-base.is-liquid {
+        background: transparent !important;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        box-shadow: none !important;
     }
     h1, h2, h3, h4, h5, h6, p, a, span, li, ul, ol, blockquote, code, pre, table, th, td, strong {
         @apply transition;

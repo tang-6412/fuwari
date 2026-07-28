@@ -8,6 +8,9 @@ patchedDependencies:
   astro:
     hash: ysrllw3gj6hylybllnynya5oma
     path: patches/astro.patch
+  liquid-glass-react@1.1.1:
+    hash: 6kiwcalljjkcnrw4cvpamlhgmy
+    path: patches/liquid-glass-react@1.1.1.patch
 
 importers:
 
@@ -96,7 +99,7 @@ importers:
         version: 0.16.22
       liquid-glass-react:
         specifier: ^1.1.1
-        version: 1.1.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 1.1.1(patch_hash=6kiwcalljjkcnrw4cvpamlhgmy)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       markdown-it:
         specifier: ^14.1.0
         version: 14.1.0
@@ -9821,7 +9824,7 @@ snapshots:
     dependencies:
       uc.micro: 2.1.0
 
-  liquid-glass-react@1.1.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
+  liquid-glass-react@1.1.1(patch_hash=6kiwcalljjkcnrw4cvpamlhgmy)(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
     dependencies:
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)

@@ -33,7 +33,7 @@ export const siteConfig: SiteConfig = {
 	background: {
 		enable: true, // Enable background image
 		src: "/bg/bg-desktop.jpg",
-		srcMobile: "/bg/bg-mobile.jpg",
+		srcMobile: "/bg/bg-mobile.png",
 		position: "center", // Background position: 'top', 'center', 'bottom'
 		size: "cover", // Background size: 'cover', 'contain', 'auto'
 		repeat: "no-repeat", // Background repeat: 'no-repeat', 'repeat', 'repeat-x', 'repeat-y'
@@ -41,7 +41,7 @@ export const siteConfig: SiteConfig = {
 		opacity: 0.5, // Background opacity (0-1)
 	},
 	logo: {
-		src: "/logo/logo-chibi.jpg",
+		src: "/logo/logo-chibi.gif",
 	},
 	toc: {
 		enable: true, // Display the table of contents on the right side of the post

@@ -86,7 +86,8 @@
 	"packageManager": "pnpm@9.14.4",
 	"pnpm": {
 		"patchedDependencies": {
-			"astro": "patches/astro.patch"
+			"astro": "patches/astro.patch",
+			"liquid-glass-react@1.1.1": "patches/liquid-glass-react@1.1.1.patch"
 		}
 	}
 }

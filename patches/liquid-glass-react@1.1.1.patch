@@ -1,0 +1,86 @@
+diff --git a/dist/index.d.ts b/dist/index.d.ts
+index 21eb61457ca4d617a7e221807bb2c903c0176113..83b163b2b7a35aa1fc7511cb871b19fd8ffdffd7 100644
+--- a/dist/index.d.ts
++++ b/dist/index.d.ts
+@@ -21,7 +21,9 @@ interface LiquidGlassProps {
+     overLight?: boolean;
+     mode?: "standard" | "polar" | "prominent" | "shader";
+     onClick?: () => void;
++    /** When true, the glass renders inline (no centered floating, no translate(-50%, -50%)). */
++    inline?: boolean;
+ }
+-export default function LiquidGlass({ children, displacementScale, blurAmount, saturation, aberrationIntensity, elasticity, cornerRadius, globalMousePos: externalGlobalMousePos, mouseOffset: externalMouseOffset, mouseContainer, className, padding, overLight, style, mode, onClick, }: LiquidGlassProps): import("react/jsx-runtime").JSX.Element;
++export default function LiquidGlass({ children, displacementScale, blurAmount, saturation, aberrationIntensity, elasticity, cornerRadius, globalMousePos: externalGlobalMousePos, mouseOffset: externalMouseOffset, mouseContainer, className, padding, overLight, style, mode, onClick, inline, }: LiquidGlassProps): import("react/jsx-runtime").JSX.Element;
+ export {};
+ //# sourceMappingURL=index.d.ts.map
+\ No newline at end of file
+diff --git a/dist/index.esm.js b/dist/index.esm.js
+index 98375df2cc8d6b9027a8bf4d90fdd2db6dedc952..e6f242091971de5274f8c7c5b381dbb960de5829 100644
+--- a/dist/index.esm.js
++++ b/dist/index.esm.js
+@@ -292,7 +292,8 @@ function LiquidGlass({
+   overLight = false,
+   style = {},
+   mode = "standard",
+-  onClick
++  onClick,
++  inline = false
+ }) {
+   const glassRef = useRef(null);
+   const [isHovered, setIsHovered] = useState(false);
+@@ -404,16 +405,16 @@ function LiquidGlass({
+     window.addEventListener("resize", updateGlassSize);
+     return () => window.removeEventListener("resize", updateGlassSize);
+   }, []);
+-  const transformStyle = `translate(calc(-50% + ${calculateElasticTranslation().x}px), calc(-50% + ${calculateElasticTranslation().y}px)) ${isActive && Boolean(onClick) ? "scale(0.96)" : calculateDirectionalScale()}`;
++  const transformStyle = `translate(calc(${inline ? "0px" : "-50%"} + ${calculateElasticTranslation().x}px), calc(${inline ? "0px" : "-50%"} + ${calculateElasticTranslation().y}px)) ${isActive && Boolean(onClick) ? "scale(0.96)" : calculateDirectionalScale()}`;
+   const baseStyle = {
+     ...style,
+     transform: transformStyle,
+     transition: "all ease-out 0.2s"
+   };
+   const positionStyles = {
+-    position: baseStyle.position || "relative",
+-    top: baseStyle.top || "50%",
+-    left: baseStyle.left || "50%"
++    position: baseStyle.position || (inline ? "relative" : "relative"),
++    top: inline ? (baseStyle.top || "auto") : (baseStyle.top || "50%"),
++    left: inline ? (baseStyle.left || "auto") : (baseStyle.left || "50%")
+   };
+   return /* @__PURE__ */ jsxs(Fragment, { children: [
+     /* @__PURE__ */ jsx(
+diff --git a/dist/index.js b/dist/index.js
+index 5ff1dce67e4a718ed10a76391a34b20b6faf2e57..4c518d711cca9930f9633d3755e612df80f09111 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -316,7 +316,8 @@ function LiquidGlass({
+   overLight = false,
+   style = {},
+   mode = "standard",
+-  onClick
++  onClick,
++  inline = false
+ }) {
+   const glassRef = (0, import_react.useRef)(null);
+   const [isHovered, setIsHovered] = (0, import_react.useState)(false);
+@@ -428,16 +429,16 @@ function LiquidGlass({
+     window.addEventListener("resize", updateGlassSize);
+     return () => window.removeEventListener("resize", updateGlassSize);
+   }, []);
+-  const transformStyle = `translate(calc(-50% + ${calculateElasticTranslation().x}px), calc(-50% + ${calculateElasticTranslation().y}px)) ${isActive && Boolean(onClick) ? "scale(0.96)" : calculateDirectionalScale()}`;
++  const transformStyle = `translate(calc(${inline ? "0px" : "-50%"} + ${calculateElasticTranslation().x}px), calc(${inline ? "0px" : "-50%"} + ${calculateElasticTranslation().y}px)) ${isActive && Boolean(onClick) ? "scale(0.96)" : calculateDirectionalScale()}`;
+   const baseStyle = {
+     ...style,
+     transform: transformStyle,
+     transition: "all ease-out 0.2s"
+   };
+   const positionStyles = {
+-    position: baseStyle.position || "relative",
+-    top: baseStyle.top || "50%",
+-    left: baseStyle.left || "50%"
++    position: baseStyle.position || (inline ? "relative" : "relative"),
++    top: inline ? (baseStyle.top || "auto") : (baseStyle.top || "50%"),
++    left: inline ? (baseStyle.left || "auto") : (baseStyle.left || "50%")
+   };
+   return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+     /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
