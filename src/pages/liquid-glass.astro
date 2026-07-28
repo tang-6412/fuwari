@@ -1,0 +1,30 @@
+---
+import LiquidGlassDemo from "@components/react/LiquidGlassDemo.tsx";
+import MainGridLayout from "../layouts/MainGridLayout.astro";
+---
+
+<MainGridLayout title="Liquid Glass" description="Apple's Liquid Glass effect for React, powered by liquid-glass-react.">
+    <div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative min-h-32">
+        <div class="card-base z-10 px-9 py-6 relative w-full">
+            <h1 class="text-3xl font-bold mb-2">Liquid Glass Demo</h1>
+            <p class="mb-6 text-[var(--text-secondary)]">
+                Apple&rsquo;s Liquid Glass effect, rendered by
+                <a
+                    href="https://github.com/rdev/liquid-glass-react"
+                    target="_blank"
+                    rel="noopener"
+                    class="text-[var(--primary)] underline"
+                >liquid-glass-react</a
+                >. Move your cursor over the card and button to see refraction,
+                chromatic aberration and elastic hover effects.
+            </p>
+
+            <LiquidGlassDemo client:only="react" />
+
+            <p class="mt-6 text-sm opacity-70">
+                Note: Safari and Firefox only partially support the effect
+                (displacement will not be visible).
+            </p>
+        </div>
+    </div>
+</MainGridLayout>

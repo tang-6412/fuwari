@@ -1,3 +1,4 @@
+import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 import svelte from "@astrojs/svelte";
 import tailwind from "@astrojs/tailwind";
@@ -74,6 +75,7 @@ export default defineConfig({
             "simple-icons": ["*"],
         },
 		}), svelte(), sitemap(),
+		react(),
 	    expressiveCode({
 			themes: [expressiveCodeConfig.theme, expressiveCodeConfig.theme],
 			plugins: [
